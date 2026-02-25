@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mail">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Mail</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<style>
+:root{
+  --bg:#f2f2f7;
+  --card:#ffffff;
+  --hair:#e5e5ea;
+  --muted:#8e8e93;
+  --muted2:#c7c7cc;
+  --blue:#007aff;
+  --chip:#f2f2f7;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);
+  overflow:hidden;
+  color:#000;
+}
+
+/* Layout */
+.screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg);
+}
+
+/* iOS-like blur topbar */
+.topbar{
+  border-bottom:1px solid rgba(229,229,234,.75);
+  padding:
+    calc(10px + env(safe-area-inset-top))
+    14px
+    10px
+    14px;
+  background:rgba(242,242,247,.78);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  backdrop-filter:saturate(180%) blur(18px);
+}
+
+.toprow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.top-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.backchev{
+  color:var(--blue);
+  font-size:20px;
+  line-height:1;
+  user-select:none;
+  flex:0 0 auto;
+}
+
+.title{
+  font-size:22px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* Right actions */
+.top-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:12px;
+  flex:0 0 auto;
+  min-width:120px;
+}
+
+.action{
+  color:var(--blue);
+  font-size:15px;
+  font-weight:600;
+  user-select:none;
+  white-space:nowrap;
+}
+
+/* icon buttons */
+.iconbtn{
+  width:32px;
+  height:32px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  color:var(--blue);
+  user-select:none;
+}
+.iconbtn:active{ background:rgba(0,0,0,.06); }
+
+.iconbtn svg{
+  width:18px;
+  height:18px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:2.2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* Search */
+.searchwrap{
+  margin-top:10px;
+  background:rgba(255,255,255,.95);
+  border:1px solid rgba(229,229,234,.95);
+  border-radius:12px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:var(--muted);
+  font-size:15px;
+}
+
+.searchdot{
+  width:10px; height:10px;
+  border:2px solid var(--muted);
+  border-radius:999px;
+  position:relative;
+  flex:0 0 auto;
+}
+.searchdot:after{
+  content:"";
+  position:absolute;
+  width:7px; height:2px;
+  background:var(--muted);
+  right:-6px; bottom:-4px;
+  transform:rotate(45deg);
+  border-radius:2px;
+}
+
+/* Tabs */
+.tabs{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:12px;
+}
+
+.tab-primary{
+  color:var(--blue);
+  font-weight:700;
+  font-size:13px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(0,122,255,0.10);
+  border:1px solid rgba(0,122,255,0.18);
+  user-select:none;
+  white-space:nowrap;
+}
+
+.tab-ico{
+  width:34px;
+  height:30px;
+  border-radius:10px;
+  border:1px solid rgba(229,229,234,.95);
+  background:rgba(242,242,247,.92);
+  display:grid;
+  place-items:center;
+  color:var(--muted);
+  user-select:none;
+}
+
+.tab-ico svg{
+  width:18px;
+  height:18px;
+  stroke:currentColor;
+  fill:none;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* Mail list */
+.mail-list{
+  flex:1;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  background:var(--card);
+}
+
+.mail-item{
+  padding:14px 16px;
+  border-bottom:1px solid var(--hair);
+  cursor:pointer;
+  background:#fff;
+  transition:background .15s;
+}
+.mail-item:active{ background:#e5e5ea; }
+
+.row1{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.sender{
+  font-weight:700;
+  font-size:16px;
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.time{
+  font-size:13px;
+  color:var(--muted);
+  white-space:nowrap;
+  flex:0 0 auto;
+}
+
+.subject{
+  font-weight:600;
+  font-size:15px;
+  margin-top:2px;
+}
+
+.preview{
+  font-size:14px;
+  color:var(--muted);
+  margin-top:3px;
+}
+
+/* Bottom bar: blur + safe area */
+.bottombar{
+  border-top:1px solid rgba(229,229,234,.75);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:
+    10px
+    16px
+    calc(10px + env(safe-area-inset-bottom))
+    16px;
+  background:rgba(242,242,247,.78);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  backdrop-filter:saturate(180%) blur(18px);
+}
+
+/* Menu button */
+.menuBtn{
+  width:40px;
+  height:40px;
+  border-radius:999px;
+  border:1px solid rgba(229,229,234,.95);
+  background:rgba(255,255,255,.92);
+  display:grid;
+  place-items:center;
+  user-select:none;
+}
+.menuBtn:active{ background:rgba(0,0,0,.06); }
+
+.menuBtn svg{
+  width:18px;
+  height:18px;
+  stroke:var(--muted);
+  fill:none;
+  stroke-width:2.2;
+  stroke-linecap:round;
+}
+
+/* Compose: grey circle, white pencil icon */
+.compose{
+  width:40px; height:40px;
+  background:var(--muted2);
+  border-radius:999px;
+  display:grid; place-items:center;
+  user-select:none;
+}
+.compose:active{ filter:brightness(.95); }
+
+.compose svg{
+  width:18px;
+  height:18px;
+  stroke:#fff;
+  fill:none;
+  stroke-width:2.2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+/* Mail view */
+.mail-view{
+  position:fixed;
+  top:0; left:100%;
+  width:100%; height:100%;
+  background:#fff;
+  transition:left .35s cubic-bezier(.4,0,.2,1);
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+.mail-view.active{ left:0; }
+
+.mail-header{
+  padding:
+    calc(14px + env(safe-area-inset-top))
+    16px
+    14px
+    16px;
+  border-bottom:1px solid rgba(229,229,234,.75);
+  background:rgba(242,242,247,.78);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  backdrop-filter:saturate(180%) blur(18px);
+}
+
+.back{
+  color:var(--blue);
+  cursor:pointer;
+  font-size:16px;
+  margin-bottom:10px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  user-select:none;
+}
+.back:active{ opacity:.7; }
+
+.mail-content{
+  padding:
+    18px
+    18px
+    calc(28px + env(safe-area-inset-bottom))
+    18px;
+  font-size:16px;
+  line-height:1.55;
+}
+
+.mail-content img{
+  max-width:100%;
+  height:auto;
+  display:block;
+  margin:0 0 16px;
+}
+
+.meta{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:6px;
+}
+hr{
+  border:none;
+  border-top:1px solid var(--hair);
+  margin:16px 0;
+}
+</style>
+</head>
+
+<body>
+<div class="screen">
+
+  <div class="topbar">
+    <div class="toprow">
+      <div class="top-left">
+        <div class="backchev" aria-hidden="true">‹</div>
+        <div class="title">Réception</div>
+      </div>
+      <div class="top-actions">
+        <div class="action">Modifier</div>
+
+        <!-- Filter icon (iOS-ish sliders) -->
+        <div class="iconbtn" title="Filtrer" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 6h10"></path>
+            <path d="M18 6h2"></path>
+            <path d="M14 6v0"></path>
+            <path d="M4 12h6"></path>
+            <path d="M14 12h6"></path>
+            <path d="M10 12v0"></path>
+            <path d="M4 18h14"></path>
+            <path d="M20 18h0"></path>
+            <path d="M18 18v0"></path>
+            <circle cx="14" cy="6" r="2.2"></circle>
+            <circle cx="10" cy="12" r="2.2"></circle>
+            <circle cx="18" cy="18" r="2.2"></circle>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="searchwrap">
+      <div class="searchdot" aria-hidden="true"></div>
+      <div>Rechercher</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab-primary">Principale</div>
+
+      <!-- Achats (cart) -->
+      <div class="tab-ico" title="Achats" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M6 6h15l-2 9H7L6 6Z"></path>
+          <path d="M6 6L5 3H2"></path>
+          <path d="M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
+          <path d="M18 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"></path>
+        </svg>
+      </div>
+
+      <!-- Notifications (bullhorn) -->
+      <div class="tab-ico" title="Notifications" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M10 10l10-4v12l-10-4V10Z"></path>
+          <path d="M10 14H6"></path>
+          <path d="M6 10v4"></path>
+        </svg>
+      </div>
+
+      <!-- Conversations (more credible: speech bubble with dots) -->
+ <div class="tab-ico" title="Conversations" aria-hidden="true">
+  <svg viewBox="0 0 24 24">
+    <path d="M4 5.5C4 4.67 4.67 4 5.5 4h13C19.33 4 20 4.67 20 5.5v9c0 .83-.67 1.5-1.5 1.5H9l-4 3v-3H5.5C4.67 16 4 15.33 4 14.5v-9Z"></path>
+  </svg>
+</div>
+    </div>
+
+  </div>
+
+  <div class="mail-list">
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Greffe – Cour d’appel de Paris</div>
+        <div class="time">9 févr.</div>
+      </div>
+      <div class="subject">Audience – Mise en état (dossier 24/1187)</div>
+      <div class="preview">Avis de renvoi et calendrier actualisé (PJ)...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">RPVA – Notifications</div>
+        <div class="time">9 févr.</div>
+      </div>
+      <div class="subject">Nouveau message sur la plateforme</div>
+      <div class="preview">Une pièce a été déposée par la partie adverse...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Secrétariat – Cabinet Landry</div>
+        <div class="time">8 févr.</div>
+      </div>
+      <div class="subject">Rappel : consultation client 11h30</div>
+      <div class="preview">Salle 3 – notes jointes + pièces à relire...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">CNB – Actualités</div>
+        <div class="time">8 févr.</div>
+      </div>
+      <div class="subject">Info : évolutions déontologie / publicité</div>
+      <div class="preview">Synthèse des dernières recommandations...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">AFP – Service Justice</div>
+        <div class="time">7 févr.</div>
+      </div>
+      <div class="subject">Dépêche – Audience sensible à Paris : tension en salle</div>
+      <div class="preview">Le tribunal a ordonné un huis clos partiel...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Clinique Saint-Martin – Programme</div>
+        <div class="time">7 févr.</div>
+      </div>
+      <div class="subject">Suivi – rendez-vous médical (conf.)</div>
+      <div class="preview">Confirmation du créneau + documents à apporter...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Le Droit en Bref</div>
+        <div class="time">6 févr.</div>
+      </div>
+      <div class="subject">Veille : pénal économique / compliance</div>
+      <div class="preview">Sélection d’arrêts et analyses (semaine 6)...</div>
+    </div>
+
+    <!-- 8 IMPORTANT -->
+    <div class="mail-item" onclick="openMail('mail8')">
+      <div class="row1">
+        <div class="sender">AFP – Rédaction</div>
+        <div class="time">8 janv.</div>
+      </div>
+      <div class="subject">Actualité – Varenne : enquête et procès liés à des milices</div>
+      <div class="preview">Une ONG évoque des flux financiers et un massacre de village...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Ordre des avocats de Paris</div>
+        <div class="time">5 févr.</div>
+      </div>
+      <div class="subject">Rappel : formation continue 2026</div>
+      <div class="preview">Modalités d’inscription et calendrier...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Banque – Alertes</div>
+        <div class="time">4 févr.</div>
+      </div>
+      <div class="subject">Information : opération effectuée</div>
+      <div class="preview">Une opération a été enregistrée sur votre compte...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Me C. Vannier</div>
+        <div class="time">3 févr.</div>
+      </div>
+      <div class="subject">Dossier V. – échanges pièces / stratégie</div>
+      <div class="preview">Je te fais suivre nos derniers éléments...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Client – F. Delorme</div>
+        <div class="time">2 févr.</div>
+      </div>
+      <div class="subject">Documents demandés (scan)</div>
+      <div class="preview">Vous trouverez ci-joint les justificatifs...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">AFP – Fil Général</div>
+        <div class="time">1 févr.</div>
+      </div>
+      <div class="subject">Actualité – RDC : reprise des combats dans l’Est</div>
+      <div class="preview">Plusieurs localités signalent de nouveaux affrontements...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Service RH – Varenne (auto)</div>
+        <div class="time">30 janv.</div>
+      </div>
+      <div class="subject">Accusé de réception – courrier recommandé</div>
+      <div class="preview">Votre envoi a bien été enregistré (réf. HR-A/2026)...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Assurance – Contrat pro</div>
+        <div class="time">29 janv.</div>
+      </div>
+      <div class="subject">Échéance annuelle – responsabilité civile</div>
+      <div class="preview">Votre avis d’échéance est disponible...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Collectif Horizon 360</div>
+        <div class="time">27 janv.</div>
+      </div>
+      <div class="subject">Communiqué – note sur des flux financiers (RDC)</div>
+      <div class="preview">Publication d’un document de synthèse et annexes...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Le Monde – Alertes</div>
+        <div class="time">24 janv.</div>
+      </div>
+      <div class="subject">Justice : sous-traitance, sécurité privée, responsabilités</div>
+      <div class="preview">Analyse et contexte – dossier spécial...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Dr. S. Harel (confidentiel)</div>
+        <div class="time">22 janv.</div>
+      </div>
+      <div class="subject">Suivi – point hebdomadaire</div>
+      <div class="preview">Confirmation du rendez-vous + questionnaire...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">FFB – Newsletter</div>
+        <div class="time">18 janv.</div>
+      </div>
+      <div class="subject">Réforme procédure pénale (synthèse)</div>
+      <div class="preview">Mesures principales et calendrier parlementaire...</div>
+    </div>
+
+    <div class="mail-item">
+      <div class="row1">
+        <div class="sender">Étude notariale – Me L. Perrin</div>
+        <div class="time">12 janv.</div>
+      </div>
+      <div class="subject">Dossier immobilier – pièces manquantes</div>
+      <div class="preview">Merci de nous transmettre les documents suivants...</div>
+    </div>
+
+  </div>
+
+  <div class="bottombar">
+    <div class="menuBtn" title="Menu" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M5 7h14"></path>
+        <path d="M5 12h14"></path>
+        <path d="M5 17h14"></path>
+      </svg>
+    </div>
+
+    <div class="compose" title="Nouveau message" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 20h9"></path>
+        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5Z"></path>
+      </svg>
+    </div>
+  </div>
+
+</div>
+
+<!-- MAIL 8 (IMPORTANT) -->
+<div id="mail8" class="mail-view">
+  <div class="mail-header">
+    <div class="back" onclick="closeMail()">‹ Réception</div>
+    <div style="font-size:18px; font-weight:800;">Actualité – Varenne : enquête et procès liés à des milices</div>
+    <div class="meta"><strong>De :</strong> AFP – Rédaction</div>
+  </div>
+
+  <div class="mail-content">
+    <img src="afp_logo.png" style="width:120px;" alt="AFP">
+
+<p><strong>PARIS/KINSHASA —</strong> Une enquête judiciaire visant le groupe Varenne International a pris une nouvelle ampleur ces derniers jours, alors qu’un procès s’est ouvert en République démocratique du Congo concernant des exactions attribuées à un groupe armé actif à proximité de plusieurs sites d’exploitation.</p>
+
+<p>Selon plusieurs sources judiciaires concordantes, la procédure congolaise porte notamment sur des faits présumés de violences commises lors d’opérations de sécurisation autour de zones minières stratégiques. Les audiences, ouvertes début janvier à Kinshasa, doivent se poursuivre pendant plusieurs semaines.</p>
+
+<img src="image2.jpg" alt="Photos Mines" style="border-radius:8px; margin-top:18px;">
+<div class="meta">Un site d’exploitation minière situé à proximité de la zone de conflit. © Photo AFP France.</div>
+
+<p>Selon des éléments communiqués par les autorités congolaises, les faits remonteraient à 2023, dans une région marquée par une instabilité chronique et la présence de milices locales. Une attaque contre un village situé à proximité d’une concession minière aurait fait plusieurs dizaines de victimes, dans des circonstances encore examinées par la justice.</p>
+
+<p>Des organisations non gouvernementales affirment que ce groupe armé aurait bénéficié de financements indirects destinés à la sécurisation d’installations industrielles dans la zone. Les enquêteurs cherchent notamment à déterminer si des flux financiers liés à des sous-traitants, des intermédiaires ou des sociétés écrans ont pu contribuer à soutenir ces combattants.</p>
+
+<p>Contacté par l’AFP, le groupe Varenne International conteste fermement toute implication et assure n’avoir jamais financé de milice. Dans une déclaration transmise à l’agence, la direction indique « coopérer pleinement avec les autorités judiciaires compétentes » et évoque des contrats de sécurité « conformes au droit local et aux standards internationaux ».</p>
+
+<img src="image1.jpg" alt="Illustration terrain" style="border-radius:8px;">
+<div class="meta">Anne Lamarck, PDG du groupe Varenne International © Photo AFP France.</div>
+
+<p>En France, une ONG spécialisée dans la lutte contre la corruption et le financement d’activités armées a déposé plainte visant d’éventuelles infractions liées au financement du terrorisme. Le parquet national financier a confirmé l’ouverture de vérifications préliminaires, sans communiquer à ce stade sur l’état d’avancement des investigations.</p>
+
+<p>Plusieurs sources proches du dossier indiquent que les investigations financières pourraient s’étendre à des circuits de paiement internationaux, dans un contexte de vigilance accrue des autorités judiciaires européennes sur les liens entre activités extractives et groupes armés.</p>
+
+<p>Le procès en cours à Kinshasa doit examiner le rôle précis des responsables poursuivis, tandis que les investigations se poursuivent sur d’éventuelles ramifications internationales, dans un contexte régional demeurant particulièrement tendu.</p>
+
+<hr>
+
+<div class="meta" style="margin-top:18px;">Copyright © 2026 Agence France-Presse. Tous droits réservés. Les documents reproduits sont la propriété de l'AFP et/ou de ses partenaires. AFP et le logo AFP sont des marques déposées de l'Agence France-Presse.</div>
+
+<script>
+function openMail(id){
+  document.getElementById(id).classList.add("active");
+}
+function closeMail(){
+  document.querySelectorAll(".mail-view").forEach(m => m.classList.remove("active"));
+}
+</script>
+</body>
+</html>
