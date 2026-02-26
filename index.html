@@ -363,6 +363,13 @@ body{
   margin:0 0 16px;
 }
 
+.inlineTitle{
+  font-size:18px;
+  font-weight:800;
+  line-height:1.25;
+  margin:6px 0 14px;
+}
+
 .meta{
   color:var(--muted);
   font-size:13px;
@@ -393,15 +400,11 @@ hr{
           <svg viewBox="0 0 24 24">
             <path d="M4 6h10"></path>
             <path d="M18 6h2"></path>
-            <path d="M14 6v0"></path>
+            <circle cx="14" cy="6" r="2.2"></circle>
             <path d="M4 12h6"></path>
             <path d="M14 12h6"></path>
-            <path d="M10 12v0"></path>
-            <path d="M4 18h14"></path>
-            <path d="M20 18h0"></path>
-            <path d="M18 18v0"></path>
-            <circle cx="14" cy="6" r="2.2"></circle>
             <circle cx="10" cy="12" r="2.2"></circle>
+            <path d="M4 18h14"></path>
             <circle cx="18" cy="18" r="2.2"></circle>
           </svg>
         </div>
@@ -435,12 +438,12 @@ hr{
         </svg>
       </div>
 
-      <!-- Conversations (more credible: speech bubble with dots) -->
- <div class="tab-ico" title="Conversations" aria-hidden="true">
-  <svg viewBox="0 0 24 24">
-    <path d="M4 5.5C4 4.67 4.67 4 5.5 4h13C19.33 4 20 4.67 20 5.5v9c0 .83-.67 1.5-1.5 1.5H9l-4 3v-3H5.5C4.67 16 4 15.33 4 14.5v-9Z"></path>
-  </svg>
-</div>
+      <!-- Conversations -->
+      <div class="tab-ico" title="Conversations" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 5.5C4 4.67 4.67 4 5.5 4h13C19.33 4 20 4.67 20 5.5v9c0 .83-.67 1.5-1.5 1.5H9l-4 3v-3H5.5C4.67 16 4 15.33 4 14.5v-9Z"></path>
+        </svg>
+      </div>
     </div>
 
   </div>
@@ -494,7 +497,7 @@ hr{
 
     <div class="mail-item">
       <div class="row1">
-        <div class="sender">Clinique Saint-Martin – Programme</div>
+        <div class="sender">Clinique Fabre-Berdys – Programme</div>
         <div class="time">7 févr.</div>
       </div>
       <div class="subject">Suivi – rendez-vous médical (conf.)</div>
@@ -510,14 +513,14 @@ hr{
       <div class="preview">Sélection d’arrêts et analyses (semaine 6)...</div>
     </div>
 
-    <!-- 8 IMPORTANT -->
+    <!-- 8 IMPORTANT (subject made generic) -->
     <div class="mail-item" onclick="openMail('mail8')">
       <div class="row1">
         <div class="sender">AFP – Rédaction</div>
         <div class="time">8 janv.</div>
       </div>
-      <div class="subject">Actualité – Varenne : enquête et procès liés à des milices</div>
-      <div class="preview">Une ONG évoque des flux financiers et un massacre de village...</div>
+      <div class="subject">AFP – Rédaction / Bulletin news 01/26</div>
+      <div class="preview">Une enquête judiciaire vise un groupe industriel et des flux financiers...</div>
     </div>
 
     <div class="mail-item">
@@ -653,38 +656,46 @@ hr{
 <div id="mail8" class="mail-view">
   <div class="mail-header">
     <div class="back" onclick="closeMail()">‹ Réception</div>
-    <div style="font-size:18px; font-weight:800;">Actualité – Varenne : enquête et procès liés à des milices</div>
+    <div style="font-size:18px; font-weight:800;">AFP – Rédaction ⎥ Bulletin news 01/26</div>
     <div class="meta"><strong>De :</strong> AFP – Rédaction</div>
   </div>
 
   <div class="mail-content">
     <img src="afp_logo.png" style="width:120px;" alt="AFP">
 
-<p><strong>PARIS/KINSHASA —</strong> Une enquête judiciaire visant le groupe Varenne International a pris une nouvelle ampleur ces derniers jours, alors qu’un procès s’est ouvert en République démocratique du Congo concernant des exactions attribuées à un groupe armé actif à proximité de plusieurs sites d’exploitation.</p>
+    <!-- ✅ Requested: title under AFP logo, before text -->
+    <div class="inlineTitle">Actualité – Varenne : enquête et procès liés à des milices</div>
 
-<p>Selon plusieurs sources judiciaires concordantes, la procédure congolaise porte notamment sur des faits présumés de violences commises lors d’opérations de sécurisation autour de zones minières stratégiques. Les audiences, ouvertes début janvier à Kinshasa, doivent se poursuivre pendant plusieurs semaines.</p>
+    <p><strong>PARIS/KINSHASA —</strong> Une enquête judiciaire visant le groupe Varenne International a pris une nouvelle ampleur ces derniers jours, alors qu’un procès s’est ouvert en République démocratique du Congo concernant des exactions attribuées à un groupe armé actif à proximité de plusieurs sites d’exploitation.</p>
 
-<img src="image2.jpg" alt="Photos Mines" style="border-radius:8px; margin-top:18px;">
-<div class="meta">Un site d’exploitation minière situé à proximité de la zone de conflit. © Photo AFP France.</div>
+    <img src="image1.jpg" alt="Illustration terrain" style="border-radius:8px;">
+    <div class="meta">Anne Lamarck, PDG du groupe Varenne International © Photo AFP France.</div>
 
-<p>Selon des éléments communiqués par les autorités congolaises, les faits remonteraient à 2023, dans une région marquée par une instabilité chronique et la présence de milices locales. Une attaque contre un village situé à proximité d’une concession minière aurait fait plusieurs dizaines de victimes, dans des circonstances encore examinées par la justice.</p>
+    <p>Selon plusieurs sources judiciaires concordantes, la procédure congolaise porte notamment sur des faits présumés de violences commises lors d’opérations de sécurisation autour de zones minières stratégiques. Les audiences, ouvertes début janvier à Kinshasa, doivent se poursuivre pendant plusieurs semaines.</p>
 
-<p>Des organisations non gouvernementales affirment que ce groupe armé aurait bénéficié de financements indirects destinés à la sécurisation d’installations industrielles dans la zone. Les enquêteurs cherchent notamment à déterminer si des flux financiers liés à des sous-traitants, des intermédiaires ou des sociétés écrans ont pu contribuer à soutenir ces combattants.</p>
+    <p>Selon des éléments communiqués par les autorités congolaises, les faits remonteraient à 2023, dans une région marquée par une instabilité chronique et la présence de milices locales. Une attaque contre un village situé à proximité d’une concession minière aurait fait plusieurs dizaines de victimes, dans des circonstances encore examinées par la justice.</p>
 
-<p>Contacté par l’AFP, le groupe Varenne International conteste fermement toute implication et assure n’avoir jamais financé de milice. Dans une déclaration transmise à l’agence, la direction indique « coopérer pleinement avec les autorités judiciaires compétentes » et évoque des contrats de sécurité « conformes au droit local et aux standards internationaux ».</p>
+    <img src="image2.jpg" alt="Photos Mines" style="border-radius:8px; margin-top:18px;">
+    <div class="meta">Un site d’exploitation minière situé à proximité de la zone de conflit. © Photo AFP France.</div>
 
-<img src="image1.jpg" alt="Illustration terrain" style="border-radius:8px;">
-<div class="meta">Anne Lamarck, PDG du groupe Varenne International © Photo AFP France.</div>
+    <p>Des organisations non gouvernementales affirment que ce groupe armé aurait bénéficié de financements indirects destinés à la sécurisation d’installations industrielles dans la zone. Les enquêteurs cherchent notamment à déterminer si des flux financiers liés à des sous-traitants, des intermédiaires ou des sociétés écrans ont pu contribuer à soutenir ces combattants.</p>
 
-<p>En France, une ONG spécialisée dans la lutte contre la corruption et le financement d’activités armées a déposé plainte visant d’éventuelles infractions liées au financement du terrorisme. Le parquet national financier a confirmé l’ouverture de vérifications préliminaires, sans communiquer à ce stade sur l’état d’avancement des investigations.</p>
+    <p>Contacté par l’AFP, le groupe Varenne International conteste fermement toute implication et assure n’avoir jamais financé de milice. Dans une déclaration transmise à l’agence, la direction indique « coopérer pleinement avec les autorités judiciaires compétentes » et évoque des contrats de sécurité « conformes au droit local et aux standards internationaux ».</p>
 
-<p>Plusieurs sources proches du dossier indiquent que les investigations financières pourraient s’étendre à des circuits de paiement internationaux, dans un contexte de vigilance accrue des autorités judiciaires européennes sur les liens entre activités extractives et groupes armés.</p>
+    <img src="image3.jpg" alt="Immeuble Varenne" style="border-radius:8px;">
+    <div class="meta">La tour Varenne à La Défense. © Photo AFP France.</div>
 
-<p>Le procès en cours à Kinshasa doit examiner le rôle précis des responsables poursuivis, tandis que les investigations se poursuivent sur d’éventuelles ramifications internationales, dans un contexte régional demeurant particulièrement tendu.</p>
+    <p>En France, une ONG spécialisée dans la lutte contre la corruption et le financement d’activités armées a déposé plainte visant d’éventuelles infractions liées au financement du terrorisme. Le parquet national financier a confirmé l’ouverture de vérifications préliminaires, sans communiquer à ce stade sur l’état d’avancement des investigations.</p>
 
-<hr>
+    <p>Plusieurs sources proches du dossier indiquent que les investigations financières pourraient s’étendre à des circuits de paiement internationaux, dans un contexte de vigilance accrue des autorités judiciaires européennes sur les liens entre activités extractives et groupes armés.</p>
 
-<div class="meta" style="margin-top:18px;">Copyright © 2026 Agence France-Presse. Tous droits réservés. Les documents reproduits sont la propriété de l'AFP et/ou de ses partenaires. AFP et le logo AFP sont des marques déposées de l'Agence France-Presse.</div>
+    <p>Le procès en cours à Kinshasa doit examiner le rôle précis des responsables poursuivis, tandis que les investigations se poursuivent sur d’éventuelles ramifications internationales, dans un contexte régional demeurant particulièrement tendu.</p>
+
+    <hr>
+
+    <div class="meta" style="margin-top:18px;">Copyright © 2026 Agence France-Presse. Tous droits réservés. Les documents reproduits sont la propriété de l'AFP et/ou de ses partenaires. AFP et le logo AFP sont des marques déposées de l'Agence France-Presse.</div>
+  </div>
+</div>
 
 <script>
 function openMail(id){
@@ -694,5 +705,6 @@ function closeMail(){
   document.querySelectorAll(".mail-view").forEach(m => m.classList.remove("active"));
 }
 </script>
+
 </body>
 </html>
